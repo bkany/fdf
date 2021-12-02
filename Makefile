@@ -14,7 +14,7 @@ SRCS		=	parsing/ft_init.c\
 OBJS		= 	$(SRCS:.c=.o)
 
 %.o: %.c
-	clang $(FLAGS) $(INCLUDES) -c $< -o $(<:.c=.o)
+	gcc $(FLAGS) $(INCLUDES) -c $< -o $(<:.c=.o)
 
 all: make-libft $(NAME)
 
@@ -22,7 +22,7 @@ make-libft:
 	make -C tools/libft/
 
 $(NAME) : $(OBJS)
-	clang $(FLAGS) $(INCLUDES) $(OBJS) $(LIBS) $(MLX) -o $(NAME)
+	gcc $(FLAGS) $(INCLUDES) $(OBJS) $(LIBS) $(MLX) -o $(NAME)
 
 	
 clean:

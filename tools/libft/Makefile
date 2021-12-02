@@ -60,7 +60,7 @@ SRC		=	ft_atoi.c\
 			ft_lstmap.c\
 			ft_minmax.c
 
-OBJ		= $(SRC:%.c=%.o)
+OBJ		= $(SRC:.c=.o)
 
 CFLAGS	=	-Wall -Werror -Wextra
 

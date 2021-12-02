@@ -53,6 +53,7 @@ int	ft_read_file_and_fill(char *file_name, t_coord *point1)
 				if (point1 == NULL)
 				{
 					point1 = ft_init_coord(x, ft_atoi(tab_line[z]), z);
+					nb_col++;
 					if (point1 == NULL)
 						error2 = -1;
 				}
