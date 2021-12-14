@@ -29,6 +29,7 @@
 /*
 ** STRUCTURES
 */
+
 typedef struct			s_coord
 {
 	float				x;
@@ -53,6 +54,13 @@ typedef struct			s_data
 	int					line_length;
 	int					endian;
 }						t_data;
+
+typedef struct 			s_env
+{
+	struct s_coord		*point1;
+	int					nb_col;
+	int					nb_row;
+}						t_env;
 /*
 ** INITIALISATION DES STRUCTURES
 */
@@ -80,6 +88,6 @@ void					ft_free_pt(t_coord *point);
 ** REMPLISSAGE DE LA STRUCTURE SET
 */
 int						ft_check_file_name(char *name);
-int						ft_read_file_and_fill(char *file_name, t_coord *point1);
+int						ft_read_file_and_fill(char *file_name, t_env *env);
 
 #endif

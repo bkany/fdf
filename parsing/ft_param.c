@@ -12,15 +12,40 @@
 
 #include "../fdf.h"
 
-int	ft_read_file_and_fill(char *file_name, t_coord *point1)
+static int ft_check_file(char *file_name, t_env *env)
 {
 	int		fd;
 	int		error;
 	int		error2;
 	char	*line;
 	char	**tab_line;
-	int		nb_col;
-	int		nb_row;
+
+	error = 1;
+	tab_line = NULL;
+	line = NULL;
+	fd = open(file_name, O_RDONLY);
+	error2 = ft_check_file_name(file_name);
+	if (fd == -1)
+		error2 = -1;
+	while ((error = get_next_line(fd, &line)) > 0 && error2 == 1)
+	{
+		tab_line = ft_split(line, ' ');
+		if (ft_strstr_isdigit(tab_line) != 1)
+			error2 = -1;
+		env->nb_row++;
+	}
+	free(line);
+	close(fd);
+	return (error2);
+}
+
+static int	ft_fill(char *file_name, t_env *env)
+{
+	int		fd;
+	int		error;
+	int		error2;
+	char	*line;
+	char	**tab_line;
 	int		z;
 	int		x;
 	t_coord	*point;
@@ -29,62 +54,44 @@ int	ft_read_file_and_fill(char *file_name, t_coord *point1)
 	error2 = 1;
 	tab_line = NULL;
 	line = NULL;
-	nb_col = 0;
-	nb_row = 0;
 	z = 0;
 	x = 0;
 	point = NULL;
 	fd = open(file_name, O_RDONLY);
 	
-	// on lit le fichier ligne par ligne si aucun problème ne se présente
 	while ((error = get_next_line(fd, &line)) > 0 && error2 == 1)
 	{
-		printf("tab_line = %s\n",line);
-		
 		tab_line = ft_split(line, ' ');
-		// traitement de la ligne si elle n'est constituée que de nombres
-		if (ft_strstr_isdigit(tab_line) == 1)
+		while (tab_line[z] != NULL)
 		{
-			nb_row++;
-			while (tab_line[z] != NULL)
+			if (env->point1 == NULL)
 			{
-				
-				//remplissage du point 1;
-				if (point1 == NULL)
-				{
-					point1 = ft_init_coord(x, ft_atoi(tab_line[z]), z);
-					nb_col++;
-					if (point1 == NULL)
-						error2 = -1;
-				}
-				// Remplissage de la suite de point
-				else
-				{
-					point = ft_init_coord(x, ft_atoi(tab_line[z]), z);
-					if (point != NULL)
-						ft_last_pt(point1)->next = point;
-					else
-						error2 = -1;
-				}
-				z++;
+				env->point1 = ft_init_coord(x, ft_atoi(tab_line[z]), z);
+				env->nb_col++;
+				if (env->point1 == NULL)
+					error2 = -1;
 			}
-			x++;
-			printf("x = %i\n", x);
+			else
+			{
+				point = ft_init_coord(x, ft_atoi(tab_line[z]), z);
+				if (point != NULL)
+					ft_last_pt(env->point1)->next = point;
+				else
+					error2 = -1;
+			}
+			z++;
 		}
-		else
-		{
-			error2 = -1;
-		}
+		z = 0;
+		x++;
 	}
-	if (fd == -1)
-		error2 = -1;
 	free(line);
 	close(fd);
-	
-	// On affecte le next du dernier point à NULL
-	if (point1 != NULL)
-	{
-		ft_last_pt(point1)->next = NULL;
-	}
+	if (env->point1 != NULL)
+		ft_last_pt(env->point1)->next = NULL;
 	return (error2);
+}
+
+int		ft_read_file_and_fill(char *file_name, t_env *env)
+{
+	return (ft_check_file(file_name, env) * ft_fill(file_name, env));
 }

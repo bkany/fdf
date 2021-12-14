@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdio.h>
 
 /*
 static int		ft_exit(int i)
@@ -23,22 +22,21 @@ static int		ft_exit(int i)
 
 int main(int argc, char **argv)
 {
-	t_coord	*point1;
+	t_env	env;
 
-	point1 = NULL;
+	env = (t_env){0};
 	if (argc == 2)
 	{
 		if (ft_check_file_name(argv[1]) == 1
-			&& ft_read_file_and_fill(argv[1], point1) == 1)
+			&& ft_read_file_and_fill(argv[1], &env) == 1)
 			{
 				//lancement du programme
-				printf("coucou2");
-				ft_free_pt(point1);
+				ft_free_pt(env.point1);
 				return (0);
 			}
 		else
 		{
-			printf("coucou");
+			ft_free_pt(env.point1);
 			return (1);
 			// free des trucs du if à faire
 		}

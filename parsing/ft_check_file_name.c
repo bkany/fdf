@@ -12,6 +12,9 @@
 
 #include "../fdf.h"
 
+/*
+** Retourne 1 si tout va bien, 0 sinon
+*/
 int		ft_check_file_name(char *name)
 {
 	int	error;
