@@ -35,3 +35,23 @@ void		ft_free_pt(t_coord *point1)
 		tmp = NULL;
 	}
 }
+
+void		ft_free_tabtab(char **tab)
+{
+	int				i;
+
+	i = 0;
+	if (tab != NULL)
+	{
+		if (tab[0] != NULL)
+		{
+			while (tab[i] != NULL)
+			{
+				free(tab[i]);
+				i++;
+			}
+		}
+		free(tab);
+		tab = NULL;
+	}
+}

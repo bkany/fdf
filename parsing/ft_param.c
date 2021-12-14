@@ -12,9 +12,8 @@
 
 #include "../fdf.h"
 
-static int ft_check_file(char *file_name, t_env *env)
+static int ft_check_file(char *file_name, t_env *env, int fd)
 {
-	int		fd;
 	int		error;
 	int		error2;
 	char	*line;
@@ -23,25 +22,22 @@ static int ft_check_file(char *file_name, t_env *env)
 	error = 1;
 	tab_line = NULL;
 	line = NULL;
-	fd = open(file_name, O_RDONLY);
 	error2 = ft_check_file_name(file_name);
-	if (fd == -1)
-		error2 = -1;
 	while ((error = get_next_line(fd, &line)) > 0 && error2 == 1)
 	{
 		tab_line = ft_split(line, ' ');
 		if (ft_strstr_isdigit(tab_line) != 1)
 			error2 = -1;
 		env->nb_row++;
+		ft_free_tabtab(tab_line);
+		free(line);
 	}
 	free(line);
-	close(fd);
 	return (error2);
 }
 
-static int	ft_fill(char *file_name, t_env *env)
+static int	ft_fill(t_env *env, int fd)
 {
-	int		fd;
 	int		error;
 	int		error2;
 	char	*line;
@@ -57,8 +53,6 @@ static int	ft_fill(char *file_name, t_env *env)
 	z = 0;
 	x = 0;
 	point = NULL;
-	fd = open(file_name, O_RDONLY);
-	
 	while ((error = get_next_line(fd, &line)) > 0 && error2 == 1)
 	{
 		tab_line = ft_split(line, ' ');
@@ -83,15 +77,30 @@ static int	ft_fill(char *file_name, t_env *env)
 		}
 		z = 0;
 		x++;
+		ft_free_tabtab(tab_line);
+		free(line);
 	}
 	free(line);
-	close(fd);
 	if (env->point1 != NULL)
 		ft_last_pt(env->point1)->next = NULL;
 	return (error2);
 }
 
+/*
+** Retourne 0 si ça se passe mal
+** 1 sinon
+*/
 int		ft_read_file_and_fill(char *file_name, t_env *env)
 {
-	return (ft_check_file(file_name, env) * ft_fill(file_name, env));
+	int fd;
+	int result;
+
+	fd = open(file_name, O_RDONLY);
+	if (fd == -1)
+		result = 0;
+	else
+		result = ft_check_file(file_name, env, fd) * ft_fill(env, fd);
+	close(fd);
+	return (result);
+
 }

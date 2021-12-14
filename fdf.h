@@ -83,6 +83,7 @@ void					ft_add_pt(t_coord *point1, t_coord *new_point);
 ** FREE DES STRUCTURES
 */
 void					ft_free_pt(t_coord *point);
+void					ft_free_tabtab(char **tab);
 
 /*
 ** REMPLISSAGE DE LA STRUCTURE SET
